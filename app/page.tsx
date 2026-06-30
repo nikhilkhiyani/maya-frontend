@@ -4,7 +4,7 @@ import { HeroCarousel } from '@/components/home/hero-carousel'
 import { ProductGrid } from '@/components/product/product-grid'
 import { heroSlides } from '@/lib/data/products'
 import { mapBackendProductToFrontend } from '@/lib/mappers'
-import { SERVER_BACKEND_URL } from '@/lib/api/client'
+import { serverFetch } from '@/lib/api/client'
 import { Button } from '@/components/ui/button'
 import { Product } from '@/lib/types'
 import { getImageUrl } from '@/lib/utils/images'
@@ -12,10 +12,8 @@ import { getImageUrl } from '@/lib/utils/images'
 export const dynamic = 'force-dynamic'
 
 async function fetchProducts(): Promise<Product[]> {
-  const apiUrl = `${SERVER_BACKEND_URL}/api/products?page=0&size=100`
   try {
-    const response = await fetch(apiUrl, { cache: 'no-store' })
-    if (!response.ok) return []
+    const response = await serverFetch('/api/products?page=0&size=100')
     const data = await response.json()
     return (data.content || []).map(mapBackendProductToFrontend)
   } catch {
@@ -25,8 +23,7 @@ async function fetchProducts(): Promise<Product[]> {
 
 async function fetchHomepageCategories() {
   try {
-    const response = await fetch(`${SERVER_BACKEND_URL}/api/categories/homepage`, { cache: 'no-store' })
-    if (!response.ok) return []
+    const response = await serverFetch('/api/categories/homepage')
     return await response.json()
   } catch {
     return []
