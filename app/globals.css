@@ -1,0 +1,275 @@
+@import "tailwindcss";
+
+:root {
+  --background: #f8f5f0;
+  --foreground: #222222;
+
+  --primary: #1a2238;
+  --secondary: #f8f5f0;
+
+  --accent: #c6a962;
+  --accent-light: #d8bf82;
+
+  --border: #e5e0d8;
+  --muted: #8b8680;
+
+  --container-max: 1400px;
+
+  /* Luxury spacing scale */
+  --section-space: 8rem;
+  --card-radius: 24px;
+
+  /* Luxury shadows */
+  --shadow-soft: 0 8px 30px rgba(0, 0, 0, 0.04);
+  --shadow-medium: 0 20px 60px rgba(0, 0, 0, 0.08);
+
+  /* Premium transition */
+  --transition-smooth: all 0.3s ease;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
+
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+
+  --font-serif: var(--font-serif);
+  --font-sans: var(--font-sans);
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  overflow-x: hidden;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+
+  font-family: var(--font-sans);
+
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  overflow-x: hidden;
+
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* ==========================
+   Typography
+========================== */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-serif);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  color: #111;
+}
+
+h1 {
+  font-size: clamp(3rem, 6vw, 5.5rem);
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: clamp(2rem, 4vw, 3rem);
+  margin-bottom: 1.5rem;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  margin-bottom: 1rem;
+}
+
+p {
+  line-height: 1.8;
+  color: var(--foreground);
+}
+
+/* ==========================
+   Container
+========================== */
+
+.container {
+  width: 100%;
+  max-width: var(--container-max);
+
+  margin-left: auto;
+  margin-right: auto;
+
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+
+@media (min-width: 768px) {
+  .container {
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+}
+
+/* ==========================
+   Luxury Section Spacing
+========================== */
+
+section {
+  padding-top: var(--section-space);
+  padding-bottom: var(--section-space);
+}
+
+/* ==========================
+   Cards
+========================== */
+
+.luxury-card {
+  background: white;
+  border: 1px solid var(--border);
+
+  border-radius: var(--card-radius);
+
+  box-shadow: var(--shadow-soft);
+
+  transition: var(--transition-smooth);
+}
+
+.luxury-card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+/* ==========================
+   Inputs
+========================== */
+
+input,
+textarea,
+select {
+  width: 100%;
+
+  border: 1px solid var(--border);
+
+  background: white;
+
+  border-radius: 16px;
+
+  padding: 1rem 1.25rem;
+
+  font-size: 1rem;
+
+  transition: var(--transition-smooth);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+  outline: none;
+
+  border-color: var(--accent);
+
+  box-shadow: 0 0 0 4px rgba(198, 169, 98, 0.15);
+}
+
+/* ==========================
+   Buttons
+========================== */
+
+.btn-luxury {
+  background: #111;
+  color: white;
+
+  border-radius: 999px;
+
+  padding: 1rem 2rem;
+
+  font-weight: 500;
+
+  transition: var(--transition-smooth);
+}
+
+.btn-luxury:hover {
+  background: #000;
+  transform: translateY(-2px);
+}
+
+/* ==========================
+   Checkout
+========================== */
+
+.checkout-page {
+  padding-top: 4rem;
+  padding-bottom: 8rem;
+}
+
+.checkout-grid {
+  display: grid;
+  gap: 3rem;
+}
+
+@media (min-width: 1024px) {
+  .checkout-grid {
+    grid-template-columns: 1.6fr 0.8fr;
+  }
+}
+
+.checkout-summary {
+  position: sticky;
+  top: 120px;
+}
+
+/* ==========================
+   Luxury Scrollbar
+========================== */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6d0c7;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #bfb8ac;
+}
+
+/* ==========================
+   Utilities
+========================== */
+
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}

@@ -1,0 +1,49 @@
+
+> neelkanth-atelier@0.1.0 build
+> next build
+
+⚠ Warning: Next.js inferred your workspace root, but it may not be correct.
+ We detected multiple lockfiles and selected the directory of /Users/nikhilkhiyani/package-lock.json as the root directory.
+ To silence this warning, set `turbopack.root` in your Next.js config, or consider removing one of the lockfiles if it's not needed.
+   See https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopack#root-directory for more information.
+ Detected additional lockfiles: 
+   * /Users/nikhilkhiyani/Desktop/jiya/neelkanth-atelier/package-lock.json
+
+▲ Next.js 16.2.4 (Turbopack)
+- Environments: .env.local
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 2.5s
+  Running TypeScript ...
+  Finished TypeScript in 1812ms ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/14) ...
+  Generating static pages using 7 workers (3/14) 
+  Generating static pages using 7 workers (6/14) 
+ReferenceError: location is not defined
+    at <unknown> (.next/server/chunks/ssr/Desktop_jiya_neelkanth-atelier_0.bxf1p._.js:1:6053)
+  Generating static pages using 7 workers (10/14) 
+✓ Generating static pages using 7 workers (14/14) in 215ms
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├ ○ /about
+├ ○ /admin
+├ ○ /admin/orders
+├ ○ /admin/products
+├ ○ /admin/users
+├ ○ /cart
+├ ○ /checkout
+├ ƒ /orders/[id]
+├ ƒ /product/[slug]
+├ ○ /profile
+├ ƒ /shop/[category]
+├ ○ /track-order
+└ ○ /wishlist
+
+
+○  (Static)   prerendered as static content
+ƒ  (Dynamic)  server-rendered on demand
+
