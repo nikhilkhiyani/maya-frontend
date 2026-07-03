@@ -1,3 +1,4 @@
+import type { CSSProperties } from 'react'
 import Link from 'next/link'
 import { Mail } from 'lucide-react'
 import { Input } from '@/components/ui/input'
@@ -44,7 +45,8 @@ export function Footer() {
                 href="https://facebook.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-background hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110"
+                className="social-btn"
+                style={{ '--social': '#1877f2' } as CSSProperties}
                 aria-label="Facebook"
               >
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -55,7 +57,8 @@ export function Footer() {
                 href="https://instagram.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-background hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110"
+                className="social-btn"
+                style={{ '--social': '#e1306c' } as CSSProperties}
                 aria-label="Instagram"
               >
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -66,7 +69,8 @@ export function Footer() {
                 href="https://twitter.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-background hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110"
+                className="social-btn"
+                style={{ '--social': '#1da1f2' } as CSSProperties}
                 aria-label="Twitter"
               >
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
@@ -77,7 +81,8 @@ export function Footer() {
                 href="https://youtube.com"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="p-2.5 rounded-full bg-background hover:bg-primary hover:text-white transition-all duration-300 hover:scale-110"
+                className="social-btn"
+                style={{ '--social': '#ff0000' } as CSSProperties}
                 aria-label="YouTube"
               >
                 <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">

@@ -77,7 +77,7 @@ export default function CategoryPage({
 
       <div className="mt-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold">{categoryName}</h1>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold">{categoryName}</h1>
           {categoryInfo?.description && (
             <p className="text-neutral-500 mt-1 max-w-xl">{categoryInfo.description}</p>
           )}

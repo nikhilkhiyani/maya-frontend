@@ -19,7 +19,7 @@ export default function ContactPage() {
     <div className="min-h-screen bg-[#faf8f5]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-12 md:py-20">
         <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-4">Contact Us</h1>
+          <h1 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-4">Contact Us</h1>
           <p className="text-neutral-500 max-w-lg mx-auto">
             We&apos;d love to hear from you. Reach out for orders, styling advice, or partnership inquiries.
           </p>

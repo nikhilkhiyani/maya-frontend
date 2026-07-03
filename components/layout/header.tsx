@@ -8,8 +8,9 @@ import {
   Menu,
   X,
   LogOut,
+  Package,
 } from 'lucide-react'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, type CSSProperties } from 'react'
 import { useCart } from '@/lib/hooks/useCart'
 import { useWishlist } from '@/lib/hooks/useWishlist'
 import { useAuth } from '@/lib/hooks'
@@ -73,64 +74,88 @@ export function Header() {
             </h1>
           </Link>
 
-          <div className="flex items-center gap-3 md:gap-5 ml-auto">
+          <div className="flex items-center gap-1 md:gap-1.5 ml-auto">
             <Link
               href="/wishlist"
-              className="relative p-1.5 hover:opacity-70 transition-opacity"
+              className="nav-pill"
+              style={{ '--i': '#9f1239', '--j': '#e11d48' } as CSSProperties}
               aria-label="Wishlist"
             >
-              <Heart size={20} strokeWidth={1.5} />
-              {wishlistItems.length > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-neutral-900 text-white text-[9px] flex items-center justify-center">
-                  {wishlistItems.length}
-                </span>
-              )}
+              <span className="nav-pill-icon">
+                <Heart size={19} strokeWidth={1.5} />
+                {wishlistItems.length > 0 && (
+                  <span className="nav-badge">{wishlistItems.length}</span>
+                )}
+              </span>
+              <span className="nav-pill-label">Wishlist</span>
             </Link>
 
             <Link
               href="/cart"
-              className="relative p-1.5 hover:opacity-70 transition-opacity"
+              className="nav-pill"
+              style={{ '--i': '#92400e', '--j': '#d97706' } as CSSProperties}
               aria-label="Cart"
             >
-              <ShoppingBag size={20} strokeWidth={1.5} />
-              {cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-neutral-900 text-white text-[9px] flex items-center justify-center">
-                  {cartItemsCount}
-                </span>
-              )}
+              <span className="nav-pill-icon">
+                <ShoppingBag size={19} strokeWidth={1.5} />
+                {cartItemsCount > 0 && (
+                  <span className="nav-badge">{cartItemsCount}</span>
+                )}
+              </span>
+              <span className="nav-pill-label">Cart</span>
             </Link>
 
             {isAuthenticated ? (
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-1 md:gap-1.5">
+                <Link
+                  href="/orders"
+                  className="nav-pill"
+                  style={{ '--i': '#1f2937', '--j': '#4b5563' } as CSSProperties}
+                  title="My Orders"
+                  aria-label="My Orders"
+                >
+                  <span className="nav-pill-icon">
+                    <Package size={19} strokeWidth={1.5} />
+                  </span>
+                  <span className="nav-pill-label">Orders</span>
+                </Link>
                 <Link
                   href="/profile"
-                  className="p-1.5 hover:opacity-70 transition-opacity"
+                  className="nav-pill"
+                  style={{ '--i': '#3f3f46', '--j': '#a16207' } as CSSProperties}
                   title={user?.name}
                   aria-label="Account"
                 >
-                  <User size={20} strokeWidth={1.5} />
+                  <span className="nav-pill-icon">
+                    <User size={19} strokeWidth={1.5} />
+                  </span>
+                  <span className="nav-pill-label">Account</span>
                 </Link>
                 {isAdmin() && (
                   <Link
                     href="/admin"
-                    className="text-[10px] font-medium tracking-wider uppercase text-amber-700 hover:underline hidden lg:block"
+                    className="text-[10px] font-medium tracking-wider uppercase text-amber-700 hover:underline hidden lg:block ml-1"
                   >
                     Admin
                   </Link>
                 )}
                 <button
                   onClick={logout}
-                  className="p-1.5 hover:opacity-70 transition-opacity hidden sm:block"
+                  className="nav-pill hidden sm:inline-flex"
+                  style={{ '--i': '#7f1d1d', '--j': '#b91c1c' } as CSSProperties}
                   title="Logout"
                   aria-label="Logout"
                 >
-                  <LogOut size={18} strokeWidth={1.5} />
+                  <span className="nav-pill-icon">
+                    <LogOut size={18} strokeWidth={1.5} />
+                  </span>
+                  <span className="nav-pill-label">Logout</span>
                 </button>
               </div>
             ) : (
               <Link
                 href="/login"
-                className="text-[11px] tracking-[0.15em] uppercase font-medium hover:opacity-70 transition-opacity"
+                className="ml-1 inline-flex items-center h-9 px-4 rounded-full bg-neutral-900 text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-neutral-800 transition-colors"
               >
                 Sign In
               </Link>

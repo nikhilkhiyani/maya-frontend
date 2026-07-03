@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import Image from 'next/image'
 import Link from 'next/link'
-import { Package, Truck, CheckCircle, MapPin, Box } from 'lucide-react'
+import { Truck, CheckCircle, MapPin, Box, XCircle } from 'lucide-react'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { ordersApi, BackendOrder } from '@/lib/api'
@@ -11,8 +11,19 @@ import { formatPrice, cn } from '@/lib/utils'
 import { getImageUrl } from '@/lib/utils/images'
 import { use } from 'react'
 
-const orderStatuses = [
-  { id: 'PENDING_PAYMENT', label: 'Pending Payment', icon: Package },
+// Cash-on-delivery orders never involve an online payment, so the journey starts
+// at "Order Placed". Online (Razorpay / UPI) orders begin once payment is received.
+const COD_TIMELINE = [
+  { id: 'CONFIRMED', label: 'Order Placed', icon: CheckCircle },
+  { id: 'PROCESSING', label: 'Processing', icon: Box },
+  { id: 'PACKED', label: 'Packed', icon: Box },
+  { id: 'READY_TO_SHIP', label: 'Ready to Ship', icon: Box },
+  { id: 'SHIPPED', label: 'Shipped', icon: Truck },
+  { id: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', icon: Truck },
+  { id: 'DELIVERED', label: 'Delivered', icon: CheckCircle },
+]
+
+const ONLINE_TIMELINE = [
   { id: 'PAYMENT_RECEIVED', label: 'Payment Received', icon: CheckCircle },
   { id: 'CONFIRMED', label: 'Confirmed', icon: CheckCircle },
   { id: 'PROCESSING', label: 'Processing', icon: Box },
@@ -22,6 +33,8 @@ const orderStatuses = [
   { id: 'OUT_FOR_DELIVERY', label: 'Out for Delivery', icon: Truck },
   { id: 'DELIVERED', label: 'Delivered', icon: CheckCircle },
 ]
+
+const CANCELLED_STATUSES = ['CANCELLED', 'REFUND_INITIATED', 'REFUND_COMPLETED']
 
 export default function OrderDetailPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params)
@@ -47,65 +60,78 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
     return (
       <div className="container mx-auto px-4 py-16 text-center">
         <h1 className="text-2xl font-serif font-bold mb-4">Order Not Found</h1>
-        <Button asChild><Link href="/profile">View All Orders</Link></Button>
+        <Button asChild><Link href="/orders">View All Orders</Link></Button>
       </div>
     )
   }
 
-  const currentStatusIndex = orderStatuses.findIndex((s) => s.id === order.status)
+  const isCancelled = CANCELLED_STATUSES.includes(order.status)
+  const timeline = order.paymentMethod === 'COD' ? COD_TIMELINE : ONLINE_TIMELINE
+  const currentStatusIndex = timeline.findIndex((s) => s.id === order.status)
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-8">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold mb-2">
-          Order {order.orderNumber}
+    <div className="container mx-auto max-w-6xl px-4 py-6 md:py-8">
+      <div className="mb-6">
+        <p className="text-xs uppercase tracking-wider text-neutral-400 mb-1">Order</p>
+        <h1 className="text-lg md:text-xl font-serif font-semibold break-all">
+          {order.orderNumber}
         </h1>
-        <p className="text-neutral-500">
+        <p className="text-sm text-neutral-500 mt-1">
           Placed on {new Date(order.createdAt).toLocaleDateString('en-IN', {
             day: 'numeric', month: 'long', year: 'numeric',
           })}
         </p>
         {order.trackingNumber && (
-          <p className="text-sm text-amber-700 mt-1">
+          <p className="text-sm text-amber-700 mt-1 break-all">
             Tracking: {order.trackingNumber}
             {order.courierName && ` via ${order.courierName}`}
           </p>
         )}
       </div>
 
-      <div className="grid lg:grid-cols-3 gap-8">
+      <div className="grid lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2 space-y-6">
           <Card className="rounded-2xl border-neutral-100">
-            <CardHeader>
-              <CardTitle className="font-serif">Order Timeline</CardTitle>
+            <CardHeader className="pb-3">
+              <CardTitle className="font-serif text-lg">Order Timeline</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="relative">
-                {orderStatuses.map((status, index) => {
-                  const Icon = status.icon
-                  const isCompleted = currentStatusIndex >= 0 && index <= currentStatusIndex
-                  const isCurrent = index === currentStatusIndex
+              {isCancelled ? (
+                <div className="flex items-center gap-3 rounded-xl bg-red-50 p-4 text-red-700">
+                  <XCircle className="h-6 w-6 shrink-0" />
+                  <div>
+                    <p className="font-medium capitalize">{order.status.toLowerCase().replace(/_/g, ' ')}</p>
+                    <p className="text-sm opacity-80">This order is no longer being processed.</p>
+                  </div>
+                </div>
+              ) : (
+                <div className="relative">
+                  {timeline.map((status, index) => {
+                    const Icon = status.icon
+                    const isCompleted = currentStatusIndex >= 0 && index <= currentStatusIndex
+                    const isCurrent = index === currentStatusIndex
 
-                  return (
-                    <div key={status.id} className="flex gap-4 pb-8 last:pb-0">
-                      <div className="flex flex-col items-center">
-                        <div className={cn(
-                          'w-10 h-10 rounded-full flex items-center justify-center border-2 transition-colors',
-                          isCompleted ? 'bg-neutral-900 border-neutral-900 text-white' : 'bg-white border-neutral-200 text-neutral-400'
-                        )}>
-                          <Icon className="h-5 w-5" />
+                    return (
+                      <div key={status.id} className="flex gap-4 pb-6 last:pb-0">
+                        <div className="flex flex-col items-center">
+                          <div className={cn(
+                            'w-9 h-9 rounded-full flex items-center justify-center border-2 transition-colors',
+                            isCompleted ? 'bg-neutral-900 border-neutral-900 text-white' : 'bg-white border-neutral-200 text-neutral-400'
+                          )}>
+                            <Icon className="h-4 w-4" />
+                          </div>
+                          {index < timeline.length - 1 && (
+                            <div className={cn('w-0.5 flex-1 mt-2', isCompleted ? 'bg-neutral-900' : 'bg-neutral-200')} />
+                          )}
                         </div>
-                        {index < orderStatuses.length - 1 && (
-                          <div className={cn('w-0.5 flex-1 mt-2', isCompleted ? 'bg-neutral-900' : 'bg-neutral-200')} />
-                        )}
+                        <div className="pt-1.5">
+                          <p className={cn('text-sm font-medium', isCurrent ? 'text-amber-700' : isCompleted ? 'text-neutral-900' : 'text-neutral-400')}>{status.label}</p>
+                        </div>
                       </div>
-                      <div className="pt-2">
-                        <p className={cn('font-medium', isCurrent && 'text-amber-700')}>{status.label}</p>
-                      </div>
-                    </div>
-                  )
-                })}
-              </div>
+                    )
+                  })}
+                </div>
+              )}
             </CardContent>
           </Card>
 

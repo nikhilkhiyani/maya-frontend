@@ -78,7 +78,7 @@ export function ProductCard({ product }: ProductCardProps) {
       transition={{ duration: 0.4 }}
       className="group relative"
     >
-      <div className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-neutral-100 mb-4 transition-transform duration-300 hover:scale-[1.02]">
+      <div className="relative aspect-[3/4] overflow-hidden rounded-xl sm:rounded-2xl bg-neutral-100 mb-2.5 sm:mb-3 transition-transform duration-300 hover:scale-[1.02]">
         <Link href={`/product/${product.slug}`} className="relative block w-full h-full">
           <Image
             src={getImageUrl(product.images[0])}
@@ -90,14 +90,22 @@ export function ProductCard({ product }: ProductCardProps) {
           />
         </Link>
 
-        {product.onSale && discount > 0 && (
-          <div className="absolute top-3 left-3 px-3 py-1.5 bg-neutral-900 text-white text-xs font-medium rounded-full">
+        {!product.inStock && (
+          <div className="absolute inset-0 z-[5] flex items-center justify-center bg-white/55 pointer-events-none">
+            <span className="px-3 py-1.5 bg-neutral-900 text-white text-[10px] font-medium tracking-widest uppercase rounded-full">
+              Sold Out
+            </span>
+          </div>
+        )}
+
+        {product.inStock && product.onSale && discount > 0 && (
+          <div className="absolute top-2 left-2 px-2 py-1 bg-neutral-900 text-white text-[10px] font-medium rounded-full">
             {discount}% OFF
           </div>
         )}
 
         {product.isNew && (
-          <div className="absolute top-3 right-3 px-3 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-full">
+          <div className="absolute top-2 right-2 px-2 py-1 bg-amber-600 text-white text-[10px] font-medium rounded-full">
             NEW
           </div>
         )}
@@ -105,52 +113,52 @@ export function ProductCard({ product }: ProductCardProps) {
         <button
           onClick={handleWishlistToggle}
           disabled={actionLoading}
-          className="absolute top-3 right-3 p-2.5 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-neutral-900 hover:text-white z-10 disabled:opacity-50"
+          className="absolute top-2 right-2 p-2 bg-white rounded-full shadow-lg opacity-0 group-hover:opacity-100 transition-all duration-300 hover:bg-neutral-900 hover:text-white z-10 disabled:opacity-50"
           aria-label={inWishlist ? 'Remove from wishlist' : 'Add to wishlist'}
         >
           <Heart
-            className="h-4 w-4"
+            className="h-3.5 w-3.5"
             fill={inWishlist ? 'currentColor' : 'none'}
           />
         </button>
 
         {product.inStock && (
-          <div className="absolute bottom-0 left-0 right-0 p-4">
+          <div className="absolute bottom-0 left-0 right-0 p-2.5 sm:p-3">
             <button
               onClick={handleQuickAdd}
               disabled={actionLoading}
-              className="w-full py-3 bg-white text-neutral-900 font-medium rounded-full opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-neutral-900 hover:text-white flex items-center justify-center gap-2 disabled:opacity-50"
+              className="w-full py-2 sm:py-2.5 bg-white text-neutral-900 text-xs sm:text-sm font-medium rounded-full opacity-0 group-hover:opacity-100 translate-y-2 group-hover:translate-y-0 transition-all duration-300 hover:bg-neutral-900 hover:text-white flex items-center justify-center gap-2 disabled:opacity-50"
             >
-              <ShoppingBag className="h-4 w-4" />
+              <ShoppingBag className="h-3.5 w-3.5" />
               Quick Add
             </button>
           </div>
         )}
       </div>
 
-      <Link href={`/product/${product.slug}`} className="block space-y-2">
-        <p className="text-xs text-neutral-500 uppercase tracking-wider">
+      <Link href={`/product/${product.slug}`} className="block space-y-1">
+        <p className="text-[10px] text-neutral-500 uppercase tracking-wider">
           {product.category}
         </p>
 
-        <h3 className="font-medium text-sm leading-snug line-clamp-2 group-hover:text-amber-800 transition-colors">
+        <h3 className="font-medium text-xs sm:text-sm leading-snug line-clamp-2 group-hover:text-amber-800 transition-colors">
           {product.name}
         </h3>
 
-        <div className="flex items-baseline gap-2">
-          <span className="font-semibold text-base text-neutral-900">
+        <div className="flex items-baseline gap-1.5 flex-wrap">
+          <span className="font-semibold text-sm sm:text-base text-neutral-900">
             {formatPrice(product.price)}
           </span>
 
           {product.originalPrice && (
-            <span className="text-sm text-neutral-400 line-through">
+            <span className="text-xs text-neutral-400 line-through">
               {formatPrice(product.originalPrice)}
             </span>
           )}
         </div>
 
         {product.rating !== undefined && product.rating > 0 && (
-          <div className="flex items-center gap-1.5 text-xs">
+          <div className="flex items-center gap-1 text-[11px]">
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
                 <span
@@ -170,7 +178,7 @@ export function ProductCard({ product }: ProductCardProps) {
         )}
 
         {product.readyToShip && (
-          <span className="inline-block text-xs text-green-700 font-medium">
+          <span className="inline-block text-[11px] text-green-700 font-medium">
             Ready to Ship
           </span>
         )}
@@ -276,7 +284,7 @@ export function WishlistItemCard({ product }: WishlistItemCardProps) {
                 : 'text-red-500 font-medium'
             }
           >
-            {product.inStock ? 'In Stock' : 'Out of Stock'}
+            {product.inStock ? 'In Stock' : 'Sold Out'}
           </span>
         </div>
 

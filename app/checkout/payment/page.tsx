@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useRef, Suspense } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import Image from 'next/image'
 import Link from 'next/link'
 import { Clock, CheckCircle, AlertCircle, Loader2, XCircle, RefreshCw } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -193,7 +192,7 @@ function PaymentContent() {
     <div className="min-h-screen bg-[#faf8f5]">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="text-center mb-10">
-          <h1 className="text-4xl font-serif text-neutral-900 mb-2">Complete Payment</h1>
+          <h1 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-2">Complete Payment</h1>
           <p className="text-neutral-500">Scan the QR code to pay via UPI</p>
         </div>
 
@@ -216,19 +215,21 @@ function PaymentContent() {
             <Card className="border-0 shadow-2xl rounded-3xl overflow-hidden">
               <div className="bg-neutral-900 text-white p-6 text-center">
                 <p className="text-sm text-neutral-400">Amount to Pay</p>
-                <p className="text-4xl font-serif text-amber-400 mt-1">{formatPrice(payment.amount)}</p>
+                <p className="text-3xl font-serif text-amber-400 mt-1">{formatPrice(payment.amount)}</p>
               </div>
               <CardContent className="p-8 flex flex-col items-center">
                 {isPending && (
                   <>
                     <div className="relative w-64 h-64 bg-white rounded-2xl border-2 border-neutral-100 shadow-inner flex items-center justify-center mb-6 overflow-hidden">
-                      <Image
+                      {/* Plain <img> (not next/image) so the merchant QR always renders
+                          regardless of NEXT_PUBLIC_API_URL / remotePatterns config. */}
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
                         src={qrSrc || `${BACKEND_URL}/uploads/IMG_4459.JPG`}
                         alt="Payment QR Code"
                         width={240}
                         height={240}
                         className="object-contain p-2"
-                        unoptimized
                         onError={handleQrError}
                       />
                     </div>

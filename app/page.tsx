@@ -72,10 +72,10 @@ export default async function Home() {
       <HeroCarousel slides={heroSlides} />
 
       {/* Categories */}
-      <section className="py-16 md:py-20 bg-white">
+      <section className="py-8 md:py-12 bg-white">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif text-neutral-900 mb-3">Shop by Category</h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-3">Shop by Category</h2>
             <p className="text-neutral-500">Curated collections for every occasion</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
@@ -104,12 +104,12 @@ export default async function Home() {
 
       {/* New Arrivals */}
       {displayNewArrivals.length > 0 && (
-        <section className="py-16 md:py-20 bg-[#faf8f5]">
+        <section className="py-8 md:py-12 bg-[#faf8f5]">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-6 md:mb-8 gap-4">
               <div>
                 <p className="text-xs tracking-[0.2em] uppercase text-amber-700 mb-2">Just Dropped</p>
-                <h2 className="text-3xl md:text-4xl font-serif text-neutral-900">New Arrivals</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-neutral-900">New Arrivals</h2>
               </div>
               <Link
                 href="/shop?sort=new-arrivals"
@@ -125,12 +125,12 @@ export default async function Home() {
 
       {/* Featured Collections */}
       {displayFeatured.length > 0 && (
-        <section className="py-16 md:py-20 bg-white">
+        <section className="py-8 md:py-12 bg-white">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-6 md:mb-8 gap-4">
               <div>
                 <p className="text-xs tracking-[0.2em] uppercase text-amber-700 mb-2">Curated</p>
-                <h2 className="text-3xl md:text-4xl font-serif text-neutral-900">Featured Collections</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-neutral-900">Featured Collections</h2>
               </div>
               <Link
                 href="/shop"
@@ -157,7 +157,7 @@ export default async function Home() {
         <div className="absolute inset-0 flex items-center justify-center text-center px-4">
           <div className="max-w-2xl text-white">
             <p className="text-xs tracking-[0.3em] uppercase mb-4 text-white/80">The MAYA Edit</p>
-            <h2 className="text-3xl md:text-5xl font-serif mb-6 leading-tight">
+            <h2 className="text-2xl md:text-4xl font-serif mb-6 leading-tight">
               Where Tradition Meets Modern Elegance
             </h2>
             <Button asChild className="bg-white text-neutral-900 hover:bg-neutral-100 h-12 px-8">
@@ -169,12 +169,12 @@ export default async function Home() {
 
       {/* Best Sellers */}
       {displayBestSellers.length > 0 && (
-        <section className="py-16 md:py-20 bg-[#faf8f5]">
+        <section className="py-8 md:py-12 bg-[#faf8f5]">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-6 md:mb-8 gap-4">
               <div>
                 <p className="text-xs tracking-[0.2em] uppercase text-amber-700 mb-2">Most Loved</p>
-                <h2 className="text-3xl md:text-4xl font-serif text-neutral-900">Best Sellers</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-neutral-900">Best Sellers</h2>
               </div>
               <Link
                 href="/shop?sort=popular"
@@ -190,12 +190,12 @@ export default async function Home() {
 
       {/* On Sale / Trending */}
       {/* {onSaleProducts.length > 0 && (
-        <section className="py-16 md:py-20 bg-white">
+        <section className="py-8 md:py-12 bg-white">
           <div className="container mx-auto px-4">
-            <div className="flex flex-col md:flex-row items-end justify-between mb-10 gap-4">
+            <div className="flex flex-col md:flex-row items-end justify-between mb-6 md:mb-8 gap-4">
               <div>
                 <p className="text-xs tracking-[0.2em] uppercase text-amber-700 mb-2">Limited Time</p>
-                <h2 className="text-3xl md:text-4xl font-serif text-neutral-900">Trending Offers</h2>
+                <h2 className="text-2xl md:text-3xl font-serif text-neutral-900">Trending Offers</h2>
               </div>
             </div>
             <ProductGrid products={onSaleProducts} />
@@ -204,10 +204,10 @@ export default async function Home() {
       )} */}
 
       {/* Instagram Gallery */}
-      {/* <section className="py-16 md:py-20 bg-neutral-200 text-white">
+      {/* <section className="py-8 md:py-12 bg-neutral-200 text-white">
         <div className="container mx-auto px-4">
           <div className="text-center mb-10 text-white">
-            <h2 className="text-3xl md:text-4xl font-serif">Follow Our Journey</h2>
+            <h2 className="text-2xl md:text-3xl font-serif">Follow Our Journey</h2>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-3">
             {[
@@ -225,10 +225,10 @@ export default async function Home() {
       </section> */}
 
       {/* Testimonials */}
-      <section className="py-16 md:py-20 bg-[#faf8f5]">
+      <section className="py-8 md:py-12 bg-[#faf8f5]">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif text-neutral-900 mb-3">What Our Customers Say</h2>
+          <div className="text-center mb-8">
+            <h2 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-3">What Our Customers Say</h2>
           </div>
           <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
             {testimonials.map((t) => (
@@ -247,7 +247,7 @@ export default async function Home() {
       </section>
 
       {/* Newsletter */}
-      <section className="py-16 md:py-20 bg-white border-t border-neutral-100">
+      <section className="py-8 md:py-12 bg-white border-t border-neutral-100">
         <div className="container mx-auto px-4 text-center max-w-xl">
           <h2 className="text-3xl font-serif text-neutral-900 mb-3">Join the MAYA Circle</h2>
           <p className="text-neutral-500 mb-8">

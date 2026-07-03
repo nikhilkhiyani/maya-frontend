@@ -24,8 +24,8 @@ export default function CartPage() {
   if (!isAuthenticated) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <ShoppingBag className="h-16 w-16 mx-auto text-neutral-300 mb-4" />
-        <h1 className="text-3xl font-serif font-bold mb-4">Sign in to view your cart</h1>
+        <ShoppingBag className="h-14 w-14 mx-auto text-neutral-300 mb-4" />
+        <h1 className="text-2xl md:text-3xl font-serif font-bold mb-4">Sign in to view your cart</h1>
         <Button asChild>
           <Link href="/login">Sign In</Link>
         </Button>
@@ -45,8 +45,8 @@ export default function CartPage() {
   if (cartItems.length === 0) {
     return (
       <div className="container mx-auto px-4 py-16 text-center">
-        <ShoppingBag className="h-16 w-16 mx-auto text-neutral-300 mb-4" />
-        <h1 className="text-3xl font-serif font-bold mb-4">Your Cart is Empty</h1>
+        <ShoppingBag className="h-14 w-14 mx-auto text-neutral-300 mb-4" />
+        <h1 className="text-2xl md:text-3xl font-serif font-bold mb-4">Your Cart is Empty</h1>
         <p className="text-foreground/70 mb-8">Add some beautiful pieces to your cart</p>
         <Button asChild>
           <Link href="/">Continue Shopping</Link>
@@ -57,16 +57,16 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl md:text-4xl font-serif font-bold mb-8">Shopping Cart</h1>
+      <h1 className="text-2xl md:text-3xl font-serif font-bold mb-6">Shopping Cart</h1>
 
       <div className="grid lg:grid-cols-3 gap-8">
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map((item) => (
             <div
               key={item.product.id}
-              className="flex gap-4 p-5 bg-white rounded-2xl shadow-sm border border-neutral-100 transition-shadow hover:shadow-md"
+              className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl shadow-sm border border-neutral-100 transition-shadow hover:shadow-md"
             >
-              <div className="relative w-24 h-32 flex-shrink-0 rounded-xl overflow-hidden">
+              <div className="relative w-20 h-28 sm:w-24 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden">
                 <Image
                   src={getImageUrl(item.product.images[0])}
                   alt={item.product.name}
@@ -77,18 +77,18 @@ export default function CartPage() {
                 />
               </div>
 
-              <div className="flex-1">
+              <div className="flex-1 min-w-0">
                 <Link
                   href={`/product/${item.product.slug}`}
-                  className="font-semibold hover:text-amber-700 transition-colors"
+                  className="font-semibold text-sm md:text-base line-clamp-2 hover:text-amber-700 transition-colors"
                 >
                   {item.product.name}
                 </Link>
-                <p className="text-lg font-semibold text-neutral-900 mt-2">
+                <p className="text-base font-semibold text-neutral-900 mt-1.5">
                   {formatPrice(item.product.price)}
                 </p>
 
-                <div className="flex items-center gap-4 mt-4">
+                <div className="flex items-center gap-3 mt-3">
                   <div className="flex items-center gap-1 border border-neutral-200 rounded-lg">
                     <button
                       onClick={() =>
@@ -117,7 +117,7 @@ export default function CartPage() {
               </div>
 
               <div className="text-right">
-                <p className="font-semibold text-lg">
+                <p className="font-semibold text-sm sm:text-base whitespace-nowrap">
                   {formatPrice(item.product.price * item.quantity)}
                 </p>
               </div>
@@ -155,7 +155,7 @@ export default function CartPage() {
               </div>
             </div>
 
-            <Button asChild className="w-full h-12 bg-neutral-900 hover:bg-neutral-800">
+            <Button asChild className="w-full h-11 bg-neutral-900 hover:bg-neutral-800">
               <Link href="/checkout">Proceed to Checkout</Link>
             </Button>
 

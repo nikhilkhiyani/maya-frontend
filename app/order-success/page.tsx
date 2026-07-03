@@ -41,7 +41,7 @@ function OrderSuccessContent() {
           <CheckCircle className="h-14 w-14 text-green-600" />
         </div>
 
-        <h1 className="text-4xl font-serif text-neutral-900 mb-3">Order Placed!</h1>
+        <h1 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-3">Order Placed!</h1>
         <p className="text-neutral-500 mb-8">
           Thank you for your purchase. A confirmation email with your invoice has been sent.
         </p>

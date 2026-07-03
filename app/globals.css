@@ -16,7 +16,7 @@
   --container-max: 1400px;
 
   /* Luxury spacing scale */
-  --section-space: 8rem;
+  --section-space: 4rem;
   --card-radius: 24px;
 
   /* Luxury shadows */
@@ -71,37 +71,38 @@ body {
    Typography
 ========================== */
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--font-serif);
-  font-weight: 500;
-  letter-spacing: -0.03em;
-  line-height: 1.1;
-  color: #111;
-}
+@layer base {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-serif);
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    /* inherit so headings adapt to their context (e.g. white on dark cards)
+       and so Tailwind text-* utilities can still override the size below */
+    color: inherit;
+  }
 
-h1 {
-  font-size: clamp(3rem, 6vw, 5.5rem);
-  margin-bottom: 2rem;
-}
+  h1 {
+    font-size: clamp(1.875rem, 4vw, 3rem);
+  }
 
-h2 {
-  font-size: clamp(2rem, 4vw, 3rem);
-  margin-bottom: 1.5rem;
-}
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2.25rem);
+  }
 
-h3 {
-  font-size: clamp(1.5rem, 3vw, 2rem);
-  margin-bottom: 1rem;
-}
+  h3 {
+    font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+  }
 
-p {
-  line-height: 1.8;
-  color: var(--foreground);
+  p {
+    line-height: 1.7;
+    color: inherit;
+  }
 }
 
 /* ==========================
@@ -137,9 +138,11 @@ p {
    Luxury Section Spacing
 ========================== */
 
-section {
-  padding-top: var(--section-space);
-  padding-bottom: var(--section-space);
+@layer base {
+  section {
+    padding-top: var(--section-space);
+    padding-bottom: var(--section-space);
+  }
 }
 
 /* ==========================
@@ -165,32 +168,45 @@ section {
    Inputs
 ========================== */
 
-input,
-textarea,
-select {
-  width: 100%;
+@layer base {
+  /* Only style text-like inputs full width. Checkboxes/radios keep their
+     native box so they don't stretch to 100% width with huge padding. */
+  input:not([type="checkbox"]):not([type="radio"]),
+  textarea,
+  select {
+    width: 100%;
 
-  border: 1px solid var(--border);
+    border: 1px solid var(--border);
 
-  background: white;
+    background: white;
 
-  border-radius: 16px;
+    border-radius: 16px;
 
-  padding: 1rem 1.25rem;
+    padding: 1rem 1.25rem;
 
-  font-size: 1rem;
+    font-size: 1rem;
 
-  transition: var(--transition-smooth);
-}
+    transition: var(--transition-smooth);
+  }
 
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
+  input:not([type="checkbox"]):not([type="radio"]):focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
 
-  border-color: var(--accent);
+    border-color: var(--accent);
 
-  box-shadow: 0 0 0 4px rgba(198, 169, 98, 0.15);
+    box-shadow: 0 0 0 4px rgba(198, 169, 98, 0.15);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1rem;
+    height: 1rem;
+    accent-color: #111;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
 }
 
 /* ==========================
@@ -272,4 +288,217 @@ select:focus {
 
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
+}
+
+/* ==========================
+   Footer social icons
+   (circular, slide-up fill + icon flip on hover)
+========================== */
+
+.social-btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 42px;
+  height: 42px;
+  border-radius: 9999px;
+  background: #fff;
+  border: 1px solid var(--border);
+  color: #1a1a1a;
+  overflow: hidden;
+  transition: color 0.4s ease, border-color 0.4s ease, transform 0.4s ease;
+}
+
+.social-btn > svg {
+  position: relative;
+  z-index: 2;
+  transition: transform 0.6s ease;
+}
+
+.social-btn::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 100%;
+  width: 100%;
+  height: 100%;
+  background: var(--social, #111);
+  transition: top 0.4s ease;
+  z-index: 1;
+}
+
+.social-btn:hover {
+  color: #fff;
+  border-color: var(--social, #111);
+  transform: translateY(-3px);
+}
+
+.social-btn:hover::before {
+  top: 0;
+}
+
+.social-btn:hover > svg {
+  transform: rotateY(360deg);
+}
+
+/* ==========================
+   Animated arrow CTA (Buy Now / Pay)
+   Dark pill with an amber offset shadow and sliding chevrons.
+========================== */
+
+.cta-arrow {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  height: 2.75rem;
+  padding: 0 1.6rem;
+  background: #111;
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.78rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--accent);
+  transition: box-shadow 0.4s ease, transform 0.4s ease, background 0.3s ease;
+}
+
+.cta-arrow:hover {
+  background: #000;
+  box-shadow: 7px 7px 0 var(--accent);
+  transform: translate(-1px, -1px);
+}
+
+.cta-arrow:active {
+  transform: translate(2px, 2px);
+  box-shadow: 2px 2px 0 var(--accent);
+}
+
+.cta-arrow:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+  box-shadow: 4px 4px 0 var(--accent);
+  transform: none;
+}
+
+.cta-arrow-icon {
+  width: 30px;
+  height: auto;
+  overflow: visible;
+}
+
+.cta-arrow-icon path {
+  fill: #fff;
+}
+
+.cta-arrow-icon path.one {
+  transform: translateX(-60%);
+  transition: 0.4s;
+}
+
+.cta-arrow-icon path.two {
+  transform: translateX(-30%);
+  transition: 0.5s;
+}
+
+.cta-arrow:hover .cta-arrow-icon path.one {
+  transform: translateX(0);
+  animation: cta_color 1s infinite 0.6s;
+}
+
+.cta-arrow:hover .cta-arrow-icon path.two {
+  transform: translateX(0);
+  animation: cta_color 1s infinite 0.4s;
+}
+
+.cta-arrow:hover .cta-arrow-icon path.three {
+  animation: cta_color 1s infinite 0.2s;
+}
+
+@keyframes cta_color {
+  0% {
+    fill: #fff;
+  }
+  50% {
+    fill: var(--accent);
+  }
+  100% {
+    fill: #fff;
+  }
+}
+
+/* ==========================
+   Header action pills
+   (icon that expands to reveal a label on hover)
+========================== */
+
+.nav-pill {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  height: 40px;
+  padding: 0 10px;
+  border-radius: 9999px;
+  color: #1a1a1a;
+  background: transparent;
+  transition: background 0.35s ease, color 0.35s ease, padding 0.35s ease;
+}
+
+.nav-pill-icon {
+  position: relative;
+  display: inline-flex;
+  z-index: 2;
+}
+
+.nav-pill-label {
+  max-width: 0;
+  opacity: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 0.62rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  font-weight: 600;
+  transition: max-width 0.35s ease, opacity 0.3s ease, margin 0.35s ease;
+}
+
+.nav-pill:hover {
+  background: linear-gradient(135deg, var(--i, #111), var(--j, #3a3a3a));
+  color: #fff;
+  padding-right: 14px;
+}
+
+.nav-pill:hover .nav-pill-label {
+  max-width: 96px;
+  opacity: 1;
+  margin-left: 7px;
+}
+
+.nav-badge {
+  position: absolute;
+  top: -6px;
+  right: -7px;
+  min-width: 15px;
+  height: 15px;
+  padding: 0 3px;
+  border-radius: 9999px;
+  background: #111;
+  color: #fff;
+  font-size: 8px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 3;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+.nav-pill:hover .nav-badge {
+  background: #fff;
+  color: #111;
 }

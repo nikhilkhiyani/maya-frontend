@@ -122,7 +122,7 @@ export default async function PolicyPage({
 
   return (
     <div className="container mx-auto px-4 py-12 md:py-16 max-w-3xl">
-      <h1 className="text-3xl md:text-4xl font-serif text-neutral-900 mb-8">{page.title}</h1>
+      <h1 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-6">{page.title}</h1>
       <div className="space-y-4 text-neutral-600 leading-relaxed">
         {page.content.map((paragraph, i) => (
           <p key={i}>{paragraph}</p>

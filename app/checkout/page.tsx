@@ -4,12 +4,14 @@ import { useState, useEffect, useRef } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { CtaArrowButton } from '@/components/ui/cta-arrow-button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent } from '@/components/ui/card'
 import { useCart } from '@/lib/hooks/useCart'
 import { useAuth } from '@/lib/hooks'
-import { checkoutApi, addressesApi, BackendAddress, PaymentMethod } from '@/lib/api'
+import { checkoutApi, addressesApi, paymentsApi, BackendAddress, PaymentMethod } from '@/lib/api'
 import { formatPrice } from '@/lib/utils'
+import { loadRazorpayScript, RazorpaySuccessResponse } from '@/lib/utils/razorpay'
 
 const STEPS = ['Address', 'Details', 'Payment']
 
@@ -25,12 +27,11 @@ export default function CheckoutPage() {
   const [selectedAddress, setSelectedAddress] = useState<string | null>(null)
   const [billingSameAsShipping, setBillingSameAsShipping] = useState(true)
   const [showAddressForm, setShowAddressForm] = useState(false)
-  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('UPI_QR')
+  const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>('RAZORPAY')
   const [couponCode, setCouponCode] = useState('')
   const [orderNotes, setOrderNotes] = useState('')
   const [gstNumber, setGstNumber] = useState('')
   const [email, setEmail] = useState('')
-  const [termsAccepted, setTermsAccepted] = useState(false)
   const [placing, setPlacing] = useState(false)
   const [error, setError] = useState('')
 
@@ -85,17 +86,74 @@ export default function CheckoutPage() {
     }
   }
 
+  const startRazorpayCheckout = async (sessionId: string) => {
+    const scriptLoaded = await loadRazorpayScript()
+    if (!scriptLoaded || !window.Razorpay) {
+      orderSubmitted.current = false
+      setPlacing(false)
+      setError('Could not load the payment gateway. Check your connection and try again.')
+      return
+    }
+
+    const rzp = await paymentsApi.createRazorpaySession(sessionId)
+
+    const razorpay = new window.Razorpay({
+      key: rzp.razorpayKeyId,
+      amount: rzp.amountInPaise,
+      currency: rzp.currency,
+      name: 'House of MAYA',
+      description: 'Order Payment',
+      order_id: rzp.razorpayOrderId,
+      prefill: {
+        name: rzp.customerName,
+        email: rzp.customerEmail,
+        contact: rzp.customerContact,
+      },
+      theme: { color: '#0a0a0a' },
+      modal: {
+        ondismiss: () => {
+          orderSubmitted.current = false
+          setPlacing(false)
+          setError('Payment was not completed. You can try again.')
+        },
+      },
+      handler: async (response: RazorpaySuccessResponse) => {
+        try {
+          const payment = await paymentsApi.verifyRazorpaySession({
+            paymentId: rzp.paymentId,
+            razorpayOrderId: response.razorpay_order_id,
+            razorpayPaymentId: response.razorpay_payment_id,
+            razorpaySignature: response.razorpay_signature,
+          })
+          orderSubmitted.current = true
+          if (payment.orderId) {
+            router.replace(`/order-success?orderId=${payment.orderId}`)
+          } else {
+            router.replace('/orders')
+          }
+        } catch {
+          orderSubmitted.current = false
+          setPlacing(false)
+          setError('Payment could not be verified. If money was deducted it will be auto-refunded, or contact support.')
+        }
+      },
+    })
+
+    razorpay.on('payment.failed', () => {
+      orderSubmitted.current = false
+      setPlacing(false)
+      setError('Payment failed. Please try again or use a different method.')
+    })
+
+    razorpay.open()
+  }
+
   const handleProceedToPayment = async () => {
     if (!selectedAddress) {
       setError('Please select a shipping address')
       setStep(0)
       return
     }
-    if (!termsAccepted) {
-      setError('Please accept the terms and conditions')
-      return
-    }
-
     setPlacing(true)
     setError('')
 
@@ -112,22 +170,28 @@ export default function CheckoutPage() {
         fromCart: true,
       })
 
-      orderSubmitted.current = true
-
       if (paymentMethod === 'COD' && session.orderId) {
+        orderSubmitted.current = true
         router.replace(`/orders/${session.orderId}`)
         return
       }
 
+      if (paymentMethod === 'RAZORPAY') {
+        // Order is created only after the payment signature is verified.
+        orderSubmitted.current = true
+        await startRazorpayCheckout(session.id)
+        return
+      }
+
+      orderSubmitted.current = true
       router.replace(`/checkout/payment?session=${session.id}`)
     } catch (err: unknown) {
       orderSubmitted.current = false
+      setPlacing(false)
       const message = err && typeof err === 'object' && 'response' in err
         ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
         : 'Failed to start checkout'
       setError(message || 'Failed to start checkout')
-    } finally {
-      setPlacing(false)
     }
   }
 
@@ -161,7 +225,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-[#faf8f5]">
       <div className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-        <h1 className="text-4xl md:text-5xl font-serif text-neutral-900 mb-6">Checkout</h1>
+        <h1 className="text-2xl md:text-3xl font-serif text-neutral-900 mb-6">Checkout</h1>
 
         <div className="flex gap-2 mb-10 overflow-x-auto">
           {STEPS.map((label, i) => (
@@ -263,6 +327,7 @@ export default function CheckoutPage() {
                     <h2 className="text-2xl font-serif mb-6">Payment Method</h2>
                     <div className="space-y-4">
                       {[
+                        { id: 'RAZORPAY' as const, title: 'Pay Online', desc: 'UPI, Card, Netbanking & Wallets — instant confirmation' },
                         { id: 'UPI_QR' as const, title: 'UPI QR Payment', desc: 'Scan QR & pay via any UPI app' },
                         { id: 'COD' as const, title: 'Cash On Delivery', desc: 'Pay when you receive' },
                       ].map((method) => (
@@ -286,15 +351,12 @@ export default function CheckoutPage() {
                     <h2 className="text-2xl font-serif">Coupon & Notes</h2>
                     <Input placeholder="Coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} />
                     <Input placeholder="Order notes (optional)" value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} />
-                    <label className="flex items-start gap-3 cursor-pointer text-sm">
-                      <input type="checkbox" checked={termsAccepted} onChange={(e) => setTermsAccepted(e.target.checked)}
-                        className="mt-1" />
-                      <span>
-                        I agree to the <Link href="/terms" className="text-amber-700 underline">Terms & Conditions</Link>,
-                        {' '}<Link href="/refund" className="text-amber-700 underline">Refund Policy</Link>, and{' '}
-                        <Link href="/shipping" className="text-amber-700 underline">Exchange Policy</Link>.
-                      </span>
-                    </label>
+                    <p className="text-xs text-neutral-400 leading-relaxed">
+                      By placing this order you agree to our{' '}
+                      <Link href="/terms" className="text-amber-700 underline">Terms</Link>,{' '}
+                      <Link href="/refund" className="text-amber-700 underline">Refund</Link>, and{' '}
+                      <Link href="/shipping" className="text-amber-700 underline">Exchange</Link> policies.
+                    </p>
                   </CardContent>
                 </Card>
               </>
@@ -303,9 +365,9 @@ export default function CheckoutPage() {
 
           <div>
             <Card className="sticky top-24 rounded-3xl border-0 shadow-2xl bg-white overflow-hidden">
-              <div className="bg-neutral-900 text-white p-7">
-                <h2 className="text-2xl font-serif">Order Summary</h2>
-                <p className="text-neutral-400 text-sm mt-1">Est. delivery: 3–5 business days</p>
+              <div className="bg-neutral-900 text-white p-6">
+                <h2 className="text-xl md:text-2xl font-serif text-white">Order Summary</h2>
+                <p className="text-neutral-300 text-sm mt-1">Est. delivery: 3–5 business days</p>
               </div>
               <CardContent className="p-8">
                 <div className="space-y-3 text-sm mb-6">
@@ -334,15 +396,15 @@ export default function CheckoutPage() {
                 {!isFinalStep ? (
                   <Button type="button" onClick={handleContinue}
                     disabled={step === 0 && !selectedAddress}
-                    className="w-full h-14 bg-neutral-900">
+                    className="w-full h-12 bg-neutral-900">
                     Continue
                   </Button>
                 ) : (
-                  <Button type="button" onClick={handleProceedToPayment}
-                    disabled={!selectedAddress || placing || !termsAccepted}
-                    className="w-full h-14 bg-neutral-900">
-                    {placing ? 'Processing...' : paymentMethod === 'COD' ? 'Place Order' : 'Proceed to Payment'}
-                  </Button>
+                  <CtaArrowButton onClick={handleProceedToPayment}
+                    disabled={!selectedAddress || placing}
+                    className="w-full">
+                    {placing ? 'Processing...' : paymentMethod === 'COD' ? 'Place Order' : paymentMethod === 'RAZORPAY' ? 'Pay Now' : 'Proceed to Payment'}
+                  </CtaArrowButton>
                 )}
 
                 {step > 0 && (

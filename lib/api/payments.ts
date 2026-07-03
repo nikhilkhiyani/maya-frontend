@@ -48,6 +48,26 @@ export interface PaymentVerifyRequest {
   razorpaySignature: string
 }
 
+export interface RazorpaySessionResponse {
+  paymentId: string
+  checkoutSessionId: string
+  razorpayOrderId: string
+  razorpayKeyId: string
+  amount: number
+  amountInPaise: number
+  currency: string
+  customerName?: string
+  customerEmail?: string
+  customerContact?: string
+}
+
+export interface RazorpaySessionVerifyRequest {
+  paymentId: string
+  razorpayOrderId: string
+  razorpayPaymentId: string
+  razorpaySignature: string
+}
+
 const TERMINAL_STATUSES: PaymentStatus[] = ['SUCCESS', 'FAILED', 'EXPIRED', 'CANCELLED']
 
 export function isTerminalPaymentStatus(status: PaymentStatus): boolean {
@@ -99,5 +119,15 @@ export const paymentsApi = {
 
   verifyPayment: async (data: PaymentVerifyRequest): Promise<void> => {
     await apiClient.post('/payments/razorpay/verify', data)
+  },
+
+  createRazorpaySession: async (checkoutSessionId: string): Promise<RazorpaySessionResponse> => {
+    const response = await apiClient.post(`/payments/razorpay/session/${checkoutSessionId}`)
+    return response.data
+  },
+
+  verifyRazorpaySession: async (data: RazorpaySessionVerifyRequest): Promise<PaymentResponse> => {
+    const response = await apiClient.post('/payments/razorpay/session/verify', data)
+    return response.data
   },
 }

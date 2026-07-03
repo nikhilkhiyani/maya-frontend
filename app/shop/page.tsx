@@ -66,7 +66,7 @@ function ShopContent() {
 
       <div className="mt-8 flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl md:text-4xl font-serif font-bold">{pageTitle}</h1>
+          <h1 className="text-2xl md:text-3xl font-serif font-bold">{pageTitle}</h1>
           <p className="text-neutral-500 mt-1">{totalElements} products</p>
         </div>
 

@@ -5,6 +5,7 @@ import Image from 'next/image'
 import { useParams, useRouter } from 'next/navigation'
 import { Heart, ShoppingBag, Minus, Plus } from 'lucide-react'
 import { Button } from '@/components/ui/button'
+import { CtaArrowButton } from '@/components/ui/cta-arrow-button'
 import { useCart } from '@/lib/hooks/useCart'
 import { useWishlist } from '@/lib/hooks/useWishlist'
 import { useAuth } from '@/lib/hooks'
@@ -106,50 +107,57 @@ export default function ProductPage() {
 
   return (
     <>
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-10">
-        <div className="grid md:grid-cols-2 gap-10 lg:gap-16">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 py-6 md:py-10">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-12">
           <div className="relative aspect-[3/4] rounded-2xl overflow-hidden bg-neutral-100">
             <Image
               src={imageUrl}
               alt={product.name}
               fill
-              className="object-cover"
+              className={`object-cover ${!product.inStock ? 'opacity-70' : ''}`}
               priority
               unoptimized
             />
+            {!product.inStock && (
+              <div className="absolute inset-0 flex items-center justify-center bg-white/40">
+                <span className="px-4 py-2 bg-neutral-900 text-white text-[11px] font-medium tracking-widest uppercase rounded-full">
+                  Sold Out
+                </span>
+              </div>
+            )}
           </div>
 
           <div className="flex flex-col">
-            <p className="text-xs tracking-widest uppercase text-amber-700 mb-2">{product.category}</p>
-            <h1 className="text-3xl md:text-4xl font-serif font-bold text-neutral-900 mb-4">
+            <p className="text-[11px] tracking-widest uppercase text-amber-700 mb-1.5">{product.category}</p>
+            <h1 className="text-xl md:text-2xl font-serif font-semibold text-neutral-900 mb-2">
               {product.name}
             </h1>
 
-            <div className="flex items-baseline gap-3 mb-6">
-              <span className="text-3xl font-semibold">{formatPrice(product.price)}</span>
+            <div className="flex items-baseline gap-2.5 mb-4">
+              <span className="text-xl md:text-2xl font-semibold">{formatPrice(product.price)}</span>
               {product.originalPrice && (
-                <span className="text-xl text-neutral-400 line-through">
+                <span className="text-base text-neutral-400 line-through">
                   {formatPrice(product.originalPrice)}
                 </span>
               )}
             </div>
 
-            <p className="text-neutral-600 leading-relaxed mb-8">{product.description}</p>
+            <p className="text-sm md:text-base text-neutral-600 leading-relaxed mb-5">{product.description}</p>
 
             {product.fabric && (
-              <p className="text-sm text-neutral-500 mb-6">
+              <p className="text-sm text-neutral-500 mb-5">
                 <span className="font-medium text-neutral-700">Fabric:</span> {product.fabric}
               </p>
             )}
 
-            <div className="mb-6">
-              <p className="text-sm font-medium mb-3">Size</p>
+            <div className="mb-5">
+              <p className="text-sm font-medium mb-2">Size</p>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (
                   <button
                     key={size}
                     onClick={() => setSelectedSize(size)}
-                    className={`px-4 py-2 text-sm border rounded-lg transition-colors ${
+                    className={`px-3.5 py-1.5 text-sm border rounded-lg transition-colors ${
                       selectedSize === size
                         ? 'border-neutral-900 bg-neutral-900 text-white'
                         : 'border-neutral-200 hover:border-neutral-400'
@@ -161,38 +169,49 @@ export default function ProductPage() {
               </div>
             </div>
 
-            <div className="mb-8">
-              <p className="text-sm font-medium mb-3">Quantity</p>
-              <div className="flex items-center gap-3 border border-neutral-200 rounded-lg w-fit">
+            <div className="mb-6">
+              <p className="text-sm font-medium mb-2">Quantity</p>
+              <div className="flex items-center gap-2 border border-neutral-200 rounded-lg w-fit">
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}
-                  className="px-4 py-2 hover:bg-neutral-50">
+                  className="px-3.5 py-1.5 hover:bg-neutral-50">
                   <Minus className="h-4 w-4" />
                 </button>
-                <span className="w-8 text-center">{quantity}</span>
+                <span className="w-8 text-center text-sm">{quantity}</span>
                 <button onClick={() => setQuantity(quantity + 1)}
-                  className="px-4 py-2 hover:bg-neutral-50">
+                  className="px-3.5 py-1.5 hover:bg-neutral-50">
                   <Plus className="h-4 w-4" />
                 </button>
               </div>
             </div>
 
-            <div className="flex flex-wrap gap-3 mt-auto">
-              <Button onClick={handleAddToCart} disabled={!product.inStock}
-                className="flex-1 h-12 bg-neutral-900 hover:bg-neutral-800">
-                <ShoppingBag className="h-4 w-4 mr-2" />
-                Add to Cart
-              </Button>
-              <Button onClick={handleWishlist} variant="outline" className="h-12 px-6">
-                <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} />
-              </Button>
-              <Button onClick={handleBuyNow} disabled={!product.inStock}
-                className="w-full h-12 bg-amber-700 hover:bg-amber-800 text-white">
-                Buy Now
-              </Button>
-            </div>
-
-            {!product.inStock && (
-              <p className="text-red-500 text-sm mt-3">Out of stock</p>
+            {product.inStock ? (
+              <div className="mt-auto space-y-3">
+                <div className="flex items-center gap-3">
+                  <Button onClick={handleAddToCart}
+                    className="flex-1 h-10 text-sm bg-neutral-900 hover:bg-neutral-800">
+                    <ShoppingBag className="h-4 w-4 mr-2" />
+                    Add to Cart
+                  </Button>
+                  <Button onClick={handleWishlist} variant="outline" className="h-10 w-10 p-0 shrink-0">
+                    <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                  </Button>
+                </div>
+                <CtaArrowButton onClick={handleBuyNow} className="w-full">
+                  Buy Now
+                </CtaArrowButton>
+              </div>
+            ) : (
+              <div className="flex flex-wrap gap-3 mt-auto">
+                <Button disabled className="flex-1 h-10 text-sm bg-neutral-200 text-neutral-500 cursor-not-allowed">
+                  Sold Out
+                </Button>
+                <Button onClick={handleWishlist} variant="outline" className="h-10 w-10 p-0 shrink-0">
+                  <Heart className={`h-4 w-4 ${isInWishlist(product.id) ? 'fill-red-500 text-red-500' : ''}`} />
+                </Button>
+                <p className="w-full text-sm text-neutral-500">
+                  This piece is currently sold out. Add it to your wishlist and we&apos;ll restock soon.
+                </p>
+              </div>
             )}
           </div>
         </div>

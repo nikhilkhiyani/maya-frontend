@@ -50,7 +50,7 @@ export default function TrackOrderPage() {
   return (
     <div className="container mx-auto px-4 py-16">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-center">
+        <h1 className="text-2xl md:text-3xl font-serif font-bold mb-4 text-center">
           Track Your Order
         </h1>
         <p className="text-neutral-500 text-center mb-8">
