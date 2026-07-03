@@ -47,34 +47,27 @@ export function Header() {
       } border-neutral-200`}
     >
       <div className="max-w-7xl mx-auto px-4 md:px-6">
-        <div className="h-16 md:h-20 flex items-center justify-between gap-4">
-          <button
-            className="md:hidden p-2 -ml-2"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
-          >
-            {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
-          </button>
+        <div className="h-16 md:h-20 grid grid-cols-[1fr_auto_1fr] items-center gap-2">
+          {/* Left: mobile menu toggle */}
+          <div className="flex items-center justify-start">
+            <button
+              className="md:hidden p-2 -ml-2 shrink-0"
+              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+              aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
+            >
+              {mobileMenuOpen ? <X size={22} /> : <Menu size={22} />}
+            </button>
+          </div>
 
-          {/* <nav className="hidden md:flex items-center gap-6 lg:gap-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-[11px] tracking-[0.2em] uppercase text-neutral-600 hover:text-neutral-900 transition-colors"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav> */}
-
-          <Link href="/" className="absolute left-1/2 -translate-x-1/2">
-            <h1 className="pt-5 font-serif text-xl md:text-3xl tracking-[0.25em] font-medium uppercase text-neutral-900 hover:tracking-[0.3em] transition-all duration-300">
+          {/* Center: logo */}
+          <Link href="/" className="justify-self-center">
+            <h1 className="font-serif text-lg sm:text-xl md:text-3xl tracking-[0.2em] sm:tracking-[0.25em] font-medium uppercase text-neutral-900 hover:tracking-[0.3em] transition-all duration-300 whitespace-nowrap">
               MAYA
             </h1>
           </Link>
 
-          <div className="flex items-center gap-1 md:gap-1.5 ml-auto">
+          {/* Right: action icons */}
+          <div className="flex items-center justify-end gap-0.5 sm:gap-1 md:gap-1.5">
             <Link
               href="/wishlist"
               className="nav-pill"
@@ -106,10 +99,10 @@ export function Header() {
             </Link>
 
             {isAuthenticated ? (
-              <div className="flex items-center gap-1 md:gap-1.5">
+              <>
                 <Link
                   href="/orders"
-                  className="nav-pill"
+                  className="nav-pill hidden sm:inline-flex"
                   style={{ '--i': '#1f2937', '--j': '#4b5563' } as CSSProperties}
                   title="My Orders"
                   aria-label="My Orders"
@@ -151,11 +144,11 @@ export function Header() {
                   </span>
                   <span className="nav-pill-label">Logout</span>
                 </button>
-              </div>
+              </>
             ) : (
               <Link
                 href="/login"
-                className="ml-1 inline-flex items-center h-9 px-4 rounded-full bg-neutral-900 text-white text-[11px] tracking-[0.15em] uppercase font-medium hover:bg-neutral-800 transition-colors"
+                className="ml-0.5 sm:ml-1 inline-flex items-center h-9 px-3 sm:px-4 rounded-full bg-neutral-900 text-white text-[10px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.15em] uppercase font-medium hover:bg-neutral-800 transition-colors whitespace-nowrap"
               >
                 Sign In
               </Link>
@@ -190,13 +183,42 @@ export function Header() {
           >
             Cart
           </Link>
+          {isAuthenticated && (
+            <Link
+              href="/orders"
+              className="block py-3 text-sm tracking-wider uppercase text-neutral-600 hover:text-neutral-900 border-b border-neutral-50"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Orders
+            </Link>
+          )}
           <Link
             href={isAuthenticated ? '/profile' : '/login'}
-            className="block py-3 text-sm tracking-wider uppercase text-neutral-600 hover:text-neutral-900"
+            className="block py-3 text-sm tracking-wider uppercase text-neutral-600 hover:text-neutral-900 border-b border-neutral-50"
             onClick={() => setMobileMenuOpen(false)}
           >
             {isAuthenticated ? 'Account' : 'Sign In'}
           </Link>
+          {isAuthenticated && isAdmin() && (
+            <Link
+              href="/admin"
+              className="block py-3 text-sm tracking-wider uppercase text-amber-700 hover:text-amber-800 border-b border-neutral-50"
+              onClick={() => setMobileMenuOpen(false)}
+            >
+              Admin
+            </Link>
+          )}
+          {isAuthenticated && (
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false)
+                logout()
+              }}
+              className="block w-full text-left py-3 text-sm tracking-wider uppercase text-red-600 hover:text-red-700"
+            >
+              Logout
+            </button>
+          )}
         </div>
       )}
     </header>

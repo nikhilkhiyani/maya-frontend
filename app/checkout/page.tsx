@@ -247,8 +247,8 @@ export default function CheckoutPage() {
           <div className="space-y-8">
             {step === 0 && (
               <Card className="border-0 shadow-xl bg-white rounded-3xl">
-                <CardContent className="p-8">
-                  <h2 className="text-2xl font-serif mb-6">Shipping Address</h2>
+                <CardContent className="p-5 sm:p-8">
+                  <h2 className="text-xl sm:text-2xl font-serif mb-6">Shipping Address</h2>
                   {!showAddressForm && addresses.length > 0 ? (
                     <div className="space-y-4">
                       {addresses.map((address) => (
@@ -305,8 +305,8 @@ export default function CheckoutPage() {
 
             {step === 1 && (
               <Card className="border-0 shadow-xl bg-white rounded-3xl">
-                <CardContent className="p-8 space-y-4">
-                  <h2 className="text-2xl font-serif mb-2">Contact & Billing</h2>
+                <CardContent className="p-5 sm:p-8 space-y-4">
+                  <h2 className="text-xl sm:text-2xl font-serif mb-2">Contact & Billing</h2>
                   <Input placeholder="Email for order updates" type="email" value={email}
                     onChange={(e) => setEmail(e.target.value)} />
                   <Input placeholder="GST Number (optional)" value={gstNumber}
@@ -323,8 +323,8 @@ export default function CheckoutPage() {
             {step === 2 && (
               <>
                 <Card className="border-0 shadow-xl bg-white rounded-3xl">
-                  <CardContent className="p-8">
-                    <h2 className="text-2xl font-serif mb-6">Payment Method</h2>
+                  <CardContent className="p-5 sm:p-8">
+                    <h2 className="text-xl sm:text-2xl font-serif mb-6">Payment Method</h2>
                     <div className="space-y-4">
                       {[
                         { id: 'RAZORPAY' as const, title: 'Pay Online', desc: 'UPI, Card, Netbanking & Wallets — instant confirmation' },
@@ -347,8 +347,8 @@ export default function CheckoutPage() {
                 </Card>
 
                 <Card className="border-0 shadow-xl bg-white rounded-3xl">
-                  <CardContent className="p-8 space-y-4">
-                    <h2 className="text-2xl font-serif">Coupon & Notes</h2>
+                  <CardContent className="p-5 sm:p-8 space-y-4">
+                    <h2 className="text-xl sm:text-2xl font-serif">Coupon & Notes</h2>
                     <Input placeholder="Coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} />
                     <Input placeholder="Order notes (optional)" value={orderNotes} onChange={(e) => setOrderNotes(e.target.value)} />
                     <p className="text-xs text-neutral-400 leading-relaxed">
@@ -369,7 +369,7 @@ export default function CheckoutPage() {
                 <h2 className="text-xl md:text-2xl font-serif text-white">Order Summary</h2>
                 <p className="text-neutral-300 text-sm mt-1">Est. delivery: 3–5 business days</p>
               </div>
-              <CardContent className="p-8">
+              <CardContent className="p-5 sm:p-8">
                 <div className="space-y-3 text-sm mb-6">
                   {cartItems.map((item) => (
                     <div key={item.product.id} className="flex justify-between">

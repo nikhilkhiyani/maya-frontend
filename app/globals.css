@@ -441,12 +441,32 @@ body {
   position: relative;
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   height: 40px;
-  padding: 0 10px;
+  width: 40px;
+  padding: 0;
   border-radius: 9999px;
   color: #1a1a1a;
   background: transparent;
-  transition: background 0.35s ease, color 0.35s ease, padding 0.35s ease;
+  flex-shrink: 0;
+  transition: background 0.35s ease, color 0.35s ease, padding 0.35s ease,
+    width 0.35s ease;
+}
+
+/* On touch/small screens keep the icons compact and skip the hover expand */
+@media (max-width: 640px) {
+  .nav-pill {
+    width: 36px;
+    height: 36px;
+  }
+}
+
+/* Only allow the expand-to-label behaviour on devices with a real hover */
+@media (hover: hover) and (min-width: 641px) {
+  .nav-pill {
+    width: auto;
+    padding: 0 10px;
+  }
 }
 
 .nav-pill-icon {
