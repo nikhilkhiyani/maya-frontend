@@ -24,7 +24,7 @@ export default function ProductPage() {
   const [product, setProduct] = useState<Product | null>(null)
   const [loading, setLoading] = useState(true)
   const [quantity, setQuantity] = useState(1)
-  const [selectedSize, setSelectedSize] = useState('M')
+  const [selectedSize, setSelectedSize] = useState('')
   const [toast, setToast] = useState('')
 
   useEffect(() => {
@@ -33,7 +33,9 @@ export default function ProductPage() {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/slug/${slug}`)
         if (!res.ok) return
         const data = await res.json()
-        setProduct(mapBackendProductToFrontend(data))
+        const mapped = mapBackendProductToFrontend(data)
+        setProduct(mapped)
+        if (mapped.sizes.length > 0) setSelectedSize(mapped.sizes[0])
       } catch (error) {
         console.error(error)
       } finally {
@@ -59,8 +61,12 @@ export default function ProductPage() {
 
   const handleAddToCart = async () => {
     if (!product || !requireAuth()) return
+    if (product.sizes.length > 0 && !selectedSize) {
+      showToast('Please select a size')
+      return
+    }
     try {
-      await addToCart(product.id, quantity)
+      await addToCart(product.id, quantity, selectedSize || undefined)
       showToast('Added to cart')
     } catch {
       showToast('Failed to add to cart')
@@ -69,8 +75,12 @@ export default function ProductPage() {
 
   const handleBuyNow = async () => {
     if (!product || !requireAuth()) return
+    if (product.sizes.length > 0 && !selectedSize) {
+      showToast('Please select a size')
+      return
+    }
     try {
-      await addToCart(product.id, quantity)
+      await addToCart(product.id, quantity, selectedSize || undefined)
       router.push('/checkout')
     } catch {
       showToast('Failed to proceed')
@@ -150,7 +160,7 @@ export default function ProductPage() {
               </p>
             )}
 
-            <div className="mb-5">
+            <div className={`mb-5 ${product.sizes.length === 0 ? 'hidden' : ''}`}>
               <p className="text-sm font-medium mb-2">Size</p>
               <div className="flex flex-wrap gap-2">
                 {product.sizes.map((size) => (

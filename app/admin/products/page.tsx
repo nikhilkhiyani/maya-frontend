@@ -18,6 +18,7 @@ export default function AdminProducts() {
     discountPrice: 0,
     stock: 0,
     images: '',
+    availableSizes: '',
     isReadyToShip: false,
     isFeatured: false,
     rating: 0,
@@ -52,6 +53,7 @@ export default function AdminProducts() {
       discountPrice: 0,
       stock: 0,
       images: '',
+      availableSizes: '',
       isReadyToShip: false,
       isFeatured: false,
       rating: 0,
@@ -70,6 +72,7 @@ export default function AdminProducts() {
       discountPrice: product.discountPrice || 0,
       stock: product.stock,
       images: product.images?.join(', ') || '',
+      availableSizes: product.availableSizes?.join(', ') || '',
       isReadyToShip: product.isReadyToShip,
       isFeatured: product.isFeatured ?? false,
       rating: product.rating || 0,
@@ -89,6 +92,7 @@ export default function AdminProducts() {
         discountPrice: formData.discountPrice || null,
         stock: formData.stock,
         images: formData.images.split(',').map(img => img.trim()).filter(Boolean),
+        availableSizes: formData.availableSizes.split(',').map(s => s.trim()).filter(Boolean),
         isReadyToShip: formData.isReadyToShip,
         isFeatured: formData.isFeatured,
         rating: formData.rating,
@@ -152,6 +156,7 @@ export default function AdminProducts() {
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Category</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Sizes</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -171,6 +176,11 @@ export default function AdminProducts() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
                   {product.stock}
+                </td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                  {product.availableSizes && product.availableSizes.length > 0
+                    ? product.availableSizes.join(', ')
+                    : '—'}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button
@@ -286,6 +296,17 @@ export default function AdminProducts() {
                   placeholder="https://example.com/image1.jpg, https://example.com/image2.jpg"
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
                 />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Available Sizes (comma-separated)</label>
+                <input
+                  type="text"
+                  value={formData.availableSizes}
+                  onChange={(e) => setFormData({ ...formData, availableSizes: e.target.value })}
+                  placeholder="S, M, L, XL"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-gray-900 focus:border-transparent"
+                />
+                <p className="text-xs text-gray-500 mt-1">Leave empty for products without sizes (e.g. accessories).</p>
               </div>
               <div className="flex items-center gap-6">
                 <label className="flex items-center">

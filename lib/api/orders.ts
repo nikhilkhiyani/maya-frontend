@@ -4,6 +4,7 @@ import { BackendProduct } from './products'
 export interface OrderItemRequest {
   productId: string
   quantity: number
+  size?: string
 }
 
 export type PaymentMethod = 'UPI_QR' | 'RAZORPAY' | 'COD' | 'STRIPE'
@@ -28,6 +29,7 @@ export interface BackendOrderItem {
   id: string
   product: BackendProduct
   quantity: number
+  size?: string
   price: number
 }
 

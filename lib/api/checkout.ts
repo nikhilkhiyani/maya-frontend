@@ -34,6 +34,7 @@ export interface CheckoutItem {
   productSlug: string
   productImage?: string
   quantity: number
+  size?: string
   unitPrice: number
   lineTotal: number
 }

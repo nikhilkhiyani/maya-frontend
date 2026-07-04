@@ -63,7 +63,7 @@ export default function CartPage() {
         <div className="lg:col-span-2 space-y-4">
           {cartItems.map((item) => (
             <div
-              key={item.product.id}
+              key={`${item.product.id}-${item.selectedSize}`}
               className="flex gap-3 sm:gap-4 p-3 sm:p-4 bg-white rounded-2xl shadow-sm border border-neutral-100 transition-shadow hover:shadow-md"
             >
               <div className="relative w-20 h-28 sm:w-24 sm:h-32 flex-shrink-0 rounded-xl overflow-hidden">
@@ -84,6 +84,11 @@ export default function CartPage() {
                 >
                   {item.product.name}
                 </Link>
+                {item.selectedSize && (
+                  <p className="text-xs text-neutral-500 mt-1">
+                    Size: <span className="font-medium text-neutral-700">{item.selectedSize}</span>
+                  </p>
+                )}
                 <p className="text-base font-semibold text-neutral-900 mt-1.5">
                   {formatPrice(item.product.price)}
                 </p>
@@ -92,7 +97,7 @@ export default function CartPage() {
                   <div className="flex items-center gap-1 border border-neutral-200 rounded-lg">
                     <button
                       onClick={() =>
-                        updateQuantity(item.product.id, Math.max(1, item.quantity - 1))
+                        updateQuantity(item.product.id, Math.max(1, item.quantity - 1), item.selectedSize)
                       }
                       className="px-3 py-2 hover:bg-neutral-50 rounded-l-lg"
                     >
@@ -100,7 +105,7 @@ export default function CartPage() {
                     </button>
                     <span className="w-8 text-center text-sm">{item.quantity}</span>
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
+                      onClick={() => updateQuantity(item.product.id, item.quantity + 1, item.selectedSize)}
                       className="px-3 py-2 hover:bg-neutral-50 rounded-r-lg"
                     >
                       <Plus className="h-4 w-4" />
@@ -108,7 +113,7 @@ export default function CartPage() {
                   </div>
 
                   <button
-                    onClick={() => removeFromCart(item.product.id)}
+                    onClick={() => removeFromCart(item.product.id, item.selectedSize)}
                     className="text-red-500 hover:text-red-600 transition-colors p-2"
                   >
                     <Trash2 className="h-5 w-5" />

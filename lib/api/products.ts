@@ -10,6 +10,7 @@ export interface BackendProduct {
   discountPrice?: number | null
   stock: number
   images: string[]
+  availableSizes?: string[]
   isReadyToShip: boolean
   rating?: number
   reviews?: number

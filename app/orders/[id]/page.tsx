@@ -153,7 +153,10 @@ export default function OrderDetailPage({ params }: { params: Promise<{ id: stri
                   </div>
                   <div className="flex-1">
                     <p className="font-medium">{item.product.name}</p>
-                    <p className="text-sm text-neutral-500">Qty: {item.quantity}</p>
+                    <p className="text-sm text-neutral-500">
+                      Qty: {item.quantity}
+                      {item.size && <span> &middot; Size: {item.size}</span>}
+                    </p>
                     <p className="font-semibold mt-1">{formatPrice(item.price * item.quantity)}</p>
                   </div>
                 </div>

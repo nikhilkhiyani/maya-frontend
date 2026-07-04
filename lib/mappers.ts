@@ -31,8 +31,10 @@ export function mapBackendProductToFrontend(
 
     subcategory: backendProduct.subcategory,
 
-    // Until backend supports sizes/colors
-    sizes: ['S', 'M', 'L', 'XL'],
+    sizes:
+      backendProduct.availableSizes && backendProduct.availableSizes.length > 0
+        ? backendProduct.availableSizes
+        : [],
     colors: ['Default'],
 
     fabric: backendProduct.fabric,

@@ -61,6 +61,11 @@ export function ProductCard({ product }: ProductCardProps) {
     e.preventDefault()
     if (!requireAuth()) return
 
+    if (product.sizes.length > 0) {
+      router.push(`/product/${product.slug}`)
+      return
+    }
+
     setActionLoading(true)
     try {
       await addToCart(product.id, 1)

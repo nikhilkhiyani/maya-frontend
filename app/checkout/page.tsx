@@ -372,8 +372,11 @@ export default function CheckoutPage() {
               <CardContent className="p-5 sm:p-8">
                 <div className="space-y-3 text-sm mb-6">
                   {cartItems.map((item) => (
-                    <div key={item.product.id} className="flex justify-between">
-                      <span className="text-neutral-600">{item.product.name} × {item.quantity}</span>
+                    <div key={`${item.product.id}-${item.selectedSize}`} className="flex justify-between">
+                      <span className="text-neutral-600">
+                        {item.product.name}
+                        {item.selectedSize && ` (${item.selectedSize})`} × {item.quantity}
+                      </span>
                       <span>{formatPrice(item.product.price * item.quantity)}</span>
                     </div>
                   ))}

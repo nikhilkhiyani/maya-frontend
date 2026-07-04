@@ -27,7 +27,7 @@ export function useCart() {
       const mappedItems = items.map(item => ({
         product: mapBackendProductToFrontend(item.product),
         quantity: item.quantity,
-        selectedSize: 'M',
+        selectedSize: item.size || '',
         selectedColor: 'Default',
       }))
       setCartItems(mappedItems)
@@ -45,9 +45,9 @@ export function useCart() {
     }
   }
 
-  const addToCart = async (productId: string, quantity: number = 1) => {
+  const addToCart = async (productId: string, quantity: number = 1, size?: string) => {
     try {
-      await cartApi.addToCart(productId, quantity)
+      await cartApi.addToCart(productId, quantity, size)
       await fetchCart()
     } catch (err: unknown) {
       const message = err && typeof err === 'object' && 'response' in err
@@ -57,9 +57,9 @@ export function useCart() {
     }
   }
 
-  const updateQuantity = async (productId: string, quantity: number) => {
+  const updateQuantity = async (productId: string, quantity: number, size?: string) => {
     try {
-      await cartApi.updateQuantity(productId, quantity)
+      await cartApi.updateQuantity(productId, quantity, size)
       await fetchCart()
     } catch (err: unknown) {
       const message = err && typeof err === 'object' && 'response' in err
@@ -69,9 +69,9 @@ export function useCart() {
     }
   }
 
-  const removeFromCart = async (productId: string) => {
+  const removeFromCart = async (productId: string, size?: string) => {
     try {
-      await cartApi.removeFromCart(productId)
+      await cartApi.removeFromCart(productId, size)
       await fetchCart()
     } catch (err: unknown) {
       const message = err && typeof err === 'object' && 'response' in err
