@@ -76,7 +76,7 @@ export default function RegisterPage() {
       <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl w-full max-w-md border border-neutral-100">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-serif text-neutral-900 mb-2">Join MAYA</h1>
-          <p className="text-neutral-500 text-sm">Create your luxury fashion account</p>
+          <p className="text-neutral-500 text-sm">Sign up with email, mobile, or Google</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-5">
@@ -98,7 +98,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Email</label>
+            <label className="text-sm font-medium text-neutral-700 mb-1.5 block">
+              Email <span className="text-neutral-400 font-normal">(optional)</span>
+            </label>
             <Input
               type="email"
               placeholder="you@example.com"
@@ -109,7 +111,9 @@ export default function RegisterPage() {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Mobile number</label>
+            <label className="text-sm font-medium text-neutral-700 mb-1.5 block">
+              Mobile number <span className="text-neutral-400 font-normal">(optional)</span>
+            </label>
             <Input
               type="tel"
               placeholder="9876543210"

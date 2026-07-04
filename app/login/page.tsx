@@ -8,15 +8,21 @@ import { Input } from '@/components/ui/input'
 import { useAuth } from '@/lib/hooks'
 import { GoogleSignInButton } from '@/components/auth/google-sign-in-button'
 
+type LoginMethod = 'email' | 'phone'
+
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
   const { login, googleLogin } = useAuth()
-  const [identifier, setIdentifier] = useState('')
+  const [loginMethod, setLoginMethod] = useState<LoginMethod>('email')
+  const [email, setEmail] = useState('')
+  const [phone, setPhone] = useState('')
   const [password, setPassword] = useState('')
   const [rememberMe, setRememberMe] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+
+  const identifier = loginMethod === 'email' ? email.trim() : phone.trim()
 
   const redirectAfterAuth = () => {
     const redirect = searchParams.get('redirect') || '/'
@@ -26,7 +32,7 @@ function LoginForm() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!identifier || !password) {
-      setError('Please enter email/phone and password')
+      setError(`Please enter your ${loginMethod === 'email' ? 'email' : 'mobile number'} and password`)
       return
     }
 
@@ -68,7 +74,32 @@ function LoginForm() {
       <div className="bg-white p-8 md:p-12 rounded-3xl shadow-xl w-full max-w-md border border-neutral-100">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-serif text-neutral-900 mb-2">Welcome Back</h1>
-          <p className="text-neutral-500 text-sm">Sign in to your MAYA account</p>
+          <p className="text-neutral-500 text-sm">Sign in with email, mobile, or Google</p>
+        </div>
+
+        <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-100 rounded-xl mb-6">
+          <button
+            type="button"
+            onClick={() => setLoginMethod('email')}
+            className={`py-2.5 text-sm font-medium rounded-lg transition-colors ${
+              loginMethod === 'email'
+                ? 'bg-white text-neutral-900 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+          >
+            Email
+          </button>
+          <button
+            type="button"
+            onClick={() => setLoginMethod('phone')}
+            className={`py-2.5 text-sm font-medium rounded-lg transition-colors ${
+              loginMethod === 'phone'
+                ? 'bg-white text-neutral-900 shadow-sm'
+                : 'text-neutral-500 hover:text-neutral-700'
+            }`}
+          >
+            Mobile
+          </button>
         </div>
 
         <form onSubmit={handleLogin} className="space-y-5">
@@ -78,18 +109,32 @@ function LoginForm() {
             </div>
           )}
 
-          <div>
-            <label className="text-sm font-medium text-neutral-700 mb-1.5 block">
-              Email or mobile number
-            </label>
-            <Input
-              type="text"
-              placeholder="you@example.com or 9876543210"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
-              className="h-12"
-            />
-          </div>
+          {loginMethod === 'email' ? (
+            <div>
+              <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Email</label>
+              <Input
+                type="email"
+                placeholder="you@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="h-12"
+                autoComplete="email"
+              />
+            </div>
+          ) : (
+            <div>
+              <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Mobile number</label>
+              <Input
+                type="tel"
+                placeholder="9876543210"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="h-12"
+                autoComplete="tel"
+              />
+              <p className="text-xs text-neutral-500 mt-1">10-digit Indian mobile number</p>
+            </div>
+          )}
 
           <div>
             <label className="text-sm font-medium text-neutral-700 mb-1.5 block">Password</label>
@@ -99,6 +144,7 @@ function LoginForm() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               className="h-12"
+              autoComplete="current-password"
             />
           </div>
 
