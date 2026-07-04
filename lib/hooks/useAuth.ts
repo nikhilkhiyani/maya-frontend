@@ -10,7 +10,7 @@ export function useAuth() {
   useEffect(() => {
     const storedUser = authApi.getStoredUser()
     const token = authApi.getStoredToken()
-    
+
     if (storedUser && token) {
       setUser(storedUser)
       document.cookie = `token=${token}; path=/; max-age=${60 * 60 * 24 * 7}; SameSite=Lax`
@@ -18,15 +18,27 @@ export function useAuth() {
     setIsLoading(false)
   }, [])
 
-  const login = async (email: string, password: string) => {
-    const response = await authApi.login({ email, password })
+  const login = async (identifier: string, password: string) => {
+    const response = await authApi.login({ identifier, password })
     authApi.storeAuth(response)
     setUser(response.user)
     return response
   }
 
-  const register = async (name: string, email: string, password: string) => {
-    const response = await authApi.register({ name, email, password })
+  const register = async (
+    name: string,
+    email: string | undefined,
+    phone: string | undefined,
+    password: string
+  ) => {
+    const response = await authApi.register({ name, email, phone, password })
+    authApi.storeAuth(response)
+    setUser(response.user)
+    return response
+  }
+
+  const googleLogin = async (idToken: string) => {
+    const response = await authApi.googleLogin(idToken)
     authApi.storeAuth(response)
     setUser(response.user)
     return response
@@ -44,6 +56,7 @@ export function useAuth() {
     isAuthenticated: !!user,
     login,
     register,
+    googleLogin,
     logout,
   }
 }

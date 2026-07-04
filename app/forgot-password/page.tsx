@@ -8,18 +8,22 @@ import { Input } from '@/components/ui/input'
 import { authApi } from '@/lib/api/auth'
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('')
+  const [identifier, setIdentifier] = useState('')
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!email) return
+    if (!identifier) return
     try {
-      await authApi.forgotPassword(email)
+      await authApi.forgotPassword(identifier)
       setSubmitted(true)
-    } catch {
-      setError('Failed to send reset link. Please try again.')
+      setError('')
+    } catch (err: unknown) {
+      const message = err && typeof err === 'object' && 'response' in err
+        ? (err as { response?: { data?: { message?: string } } }).response?.data?.message
+        : 'Failed to send reset link. Please try again.'
+      setError(message || 'Failed to send reset link. Please try again.')
     }
   }
 
@@ -36,7 +40,7 @@ export default function ForgotPasswordPage() {
         {submitted ? (
           <div className="text-center py-6">
             <p className="text-neutral-600 mb-6">
-              If an account exists for <strong>{email}</strong>, you&apos;ll receive a reset link shortly.
+              If an account exists for <strong>{identifier}</strong>, you&apos;ll receive a reset link shortly.
             </p>
             <Button asChild className="bg-neutral-900 hover:bg-neutral-800">
               <Link href="/login">Back to Sign In</Link>
@@ -46,10 +50,10 @@ export default function ForgotPasswordPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             {error && <p className="text-red-600 text-sm">{error}</p>}
             <Input
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              type="text"
+              placeholder="Email or mobile number"
+              value={identifier}
+              onChange={(e) => setIdentifier(e.target.value)}
               className="h-12"
               required
             />

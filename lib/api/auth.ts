@@ -1,13 +1,14 @@
 import { apiClient } from './client'
 
 export interface LoginRequest {
-  email: string
+  identifier: string
   password: string
 }
 
 export interface RegisterRequest {
   name: string
-  email: string
+  email?: string
+  phone?: string
   password: string
 }
 
@@ -17,8 +18,10 @@ export interface AuthResponse {
   user: {
     id: string
     name: string
-    email: string
+    email?: string
+    phone?: string
     role: string
+    authProvider?: string
     createdAt: string
   }
 }
@@ -31,6 +34,11 @@ export const authApi = {
 
   register: async (data: RegisterRequest): Promise<AuthResponse> => {
     const response = await apiClient.post('/auth/register', data)
+    return response.data
+  },
+
+  googleLogin: async (idToken: string): Promise<AuthResponse> => {
+    const response = await apiClient.post('/auth/google', { idToken })
     return response.data
   },
 
@@ -65,8 +73,8 @@ export const authApi = {
     }
   },
 
-  forgotPassword: async (email: string): Promise<void> => {
-    await apiClient.post('/auth/forgot-password', { email })
+  forgotPassword: async (identifier: string): Promise<void> => {
+    await apiClient.post('/auth/forgot-password', { identifier })
   },
 
   resetPassword: async (token: string, newPassword: string): Promise<void> => {

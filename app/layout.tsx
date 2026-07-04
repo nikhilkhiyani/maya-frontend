@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Playfair_Display, Inter } from "next/font/google";
 import "./globals.css";
 import { ConditionalLayout } from "@/components/layout/conditional-layout";
+import { AuthProviders } from "@/components/auth/auth-providers";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -31,7 +32,9 @@ export default function RootLayout({
   return (
     <html lang="en" data-scroll-behavior="smooth" className={`${playfair.variable} ${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
-        <ConditionalLayout>{children}</ConditionalLayout>
+        <AuthProviders>
+          <ConditionalLayout>{children}</ConditionalLayout>
+        </AuthProviders>
       </body>
     </html>
   );
