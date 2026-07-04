@@ -24,7 +24,11 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (user) {
-      setProfile({ name: user.name, email: user.email, phone: '' })
+      setProfile({
+        name: user.name,
+        email: user.email ?? '',
+        phone: user.phone ?? '',
+      })
     }
     addressesApi.getAll().then(setAddresses).catch(() => {})
     ordersApi.getMyOrders().then(setOrders).catch(() => {})
